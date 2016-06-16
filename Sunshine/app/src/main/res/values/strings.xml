@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Sunshine</string>
+    <string name="action_settings">Settings</string>
+    <string name="today">Today, June 24</string>
+    <string name="twentyone">21*</string>
+    <string name="eight">8*</string>
+    <string name = "action_refresh1" translatable="false">Refresh</string>
+</resources>
