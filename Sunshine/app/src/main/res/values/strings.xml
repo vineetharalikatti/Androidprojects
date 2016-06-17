@@ -5,4 +5,5 @@
     <string name="twentyone">21*</string>
     <string name="eight">8*</string>
     <string name = "action_refresh1" translatable="false">Refresh</string>
+    <string name="enterPostalCodeArea">Enter the postal code here</string>
 </resources>
