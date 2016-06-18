@@ -236,7 +236,7 @@ public class ForecastFragment extends Fragment {
         private String formatHighLow(String max, String min) {
             Double maximum = Double.parseDouble(max);
             Double minimum = Double.parseDouble(min);
-            String highLow = maximum.intValue()+" / "+minimum.intValue();
+            String highLow = Math.round(maximum)+" / "+ Math.round(minimum);
             return highLow;
         }
 
