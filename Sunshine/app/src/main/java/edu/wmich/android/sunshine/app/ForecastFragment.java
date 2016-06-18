@@ -36,9 +36,6 @@ import java.util.List;
 
 import java.text.SimpleDateFormat;
 
-/**
- * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
- */
 public class ForecastFragment extends Fragment {
 
     public ArrayAdapter<String> mForecastAdapter;
@@ -74,7 +71,6 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Create some dummy data for the ListView. Here's a sample weekly forecast
         String[] data = {
                 "Mon 6/23 - Sunny - 31/17",
                 "Tue 6/24 - Foggy - 21/8",
@@ -86,9 +82,6 @@ public class ForecastFragment extends Fragment {
         };
         List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
-        // Now that we have some dummy forecast data, create an ArrayAdapter.
-        // The ArrayAdapter will take data from a source (like our dummy forecast) and
-        // use it to populate the ListView it's attached to.
         mForecastAdapter =
                 new ArrayAdapter<String>(
                         getActivity(), // The current context (this activity)
@@ -108,44 +101,49 @@ public class ForecastFragment extends Fragment {
     private class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+        private final String HTTP = "http";
+        private final String URL = "api.openweathermap.org";
+        private final String DATA = "data";
+        private final String DECIMAL = "2.5";
+        private final String FORECAST = "forecast";
+        private final String DAILY = "daily";
+        private final String ZIP = "zip";
+        private final String MODE = "mode";
+        private final String JSON = "json";
+        private final String UNITS = "units";
+        private final String METRIC = "metric";
+        private final String COUNT = "cnt";
 
         @Override
         protected String[] doInBackground(String... postcode) {
-            // These two need to be declared outside the try/catch
-            // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
 
             String numOfDays = "9";
-            // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
                 //  String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?zip=48084&mode=json&units=metric&cnt=7";
                 Uri.Builder builder = new Uri.Builder();
-                builder.scheme("http")
-                        .authority("api.openweathermap.org")
-                        .appendPath("data")
-                        .appendPath("2.5")
-                        .appendPath("forecast")
-                        .appendPath("daily")
-                        .appendQueryParameter("zip", postcode[0])
-                        .appendQueryParameter("mode", "json")
-                        .appendQueryParameter("units","metric")
-                        .appendQueryParameter("cnt",numOfDays);
+                builder.scheme(HTTP)
+                        .authority(URL)
+                        .appendPath(DATA)
+                        .appendPath(DECIMAL)
+                        .appendPath(FORECAST)
+                        .appendPath(DAILY)
+                        .appendQueryParameter(ZIP, postcode[0])
+                        .appendQueryParameter(MODE, JSON)
+                        .appendQueryParameter(UNITS, METRIC)
+                        .appendQueryParameter(COUNT,numOfDays);
                 String baseUrl = builder.build().toString();
                 String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
                 URL url = new URL(baseUrl.concat(apiKey));
 
-                // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
-                // Read the input stream into a String
                 InputStream inputStream = urlConnection.getInputStream();
                 StringBuffer buffer = new StringBuffer();
                 if (inputStream == null) {
@@ -156,29 +154,16 @@ public class ForecastFragment extends Fragment {
 
                 String line;
                 while ((line = reader.readLine()) != null) {
-                   // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
                     buffer.append(line + "\n");
                 }
 
                 if (buffer.length() == 0) {
-                    // Stream was empty. No point in parsing.
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
 
-//                String[] resultData = parseJson(forecastJsonStr,Integer.parseInt(numOfDays));
-
-//               for(String s : resultData){
-//                   Log.e(LOG_TAG, "Forecast entry: " +s);
-//               }
-                Log.e(LOG_TAG,"json dude"+forecastJsonStr);
-
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
-                // If the code didn't successfully get the weather data, there's no point in attemping
-                // to parse it.
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -204,23 +189,30 @@ public class ForecastFragment extends Fragment {
 
         private String[] parseJson(String forecastJsonStr, int numOfDays) throws JSONException {
 
+            final String LIST = "list";
+            final String TEMP = "temp";
+            final String MAX = "max";
+            final String MIN = "min";
+            final String WEATHER = "weather";
+            final String DESCRIPTION = "description";
+
             JSONObject json = new JSONObject(forecastJsonStr);
 
-            JSONArray listArray = json.getJSONArray("list");
+            JSONArray listArray = json.getJSONArray(LIST);
             String[] resultStr = new String[numOfDays];
             for(int i = 0; i<listArray.length();i++){
                 JSONObject object = listArray.getJSONObject(i);
 
-                JSONObject tempObject = object.getJSONObject("temp");
+                JSONObject tempObject = object.getJSONObject(TEMP);
 
-                String max = tempObject.getString("max");
-                String min = tempObject.getString("min");
+                String max = tempObject.getString(MAX);
+                String min = tempObject.getString(MIN);
 
                 String highlow = formatHighLow(max, min);
 
-                JSONObject weatherObject = object.getJSONArray("weather").getJSONObject(0);
+                JSONObject weatherObject = object.getJSONArray(WEATHER).getJSONObject(0);
 
-                String descriptionObject = weatherObject.getString("description");
+                String descriptionObject = weatherObject.getString(DESCRIPTION);
 
                 String day;
                 android.text.format.Time dayTime = new android.text.format.Time();
@@ -233,19 +225,18 @@ public class ForecastFragment extends Fragment {
 
                 resultStr[i]=day + " - " + descriptionObject + " - " + highlow;
             }
-        return resultStr;
-
+            return resultStr;
         }
 
-            private String getReadableDateString(long time){
-            // Because the API returns a unix timestamp (measured in seconds),
-            // it must be converted to milliseconds in order to be converted to valid date.
+         private String getReadableDateString(long time){
              SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
              return shortenedDateFormat.format(time);
-                 }
+         }
 
         private String formatHighLow(String max, String min) {
-            String highLow = max+" / "+min;
+            Double maximum = Double.parseDouble(max);
+            Double minimum = Double.parseDouble(min);
+            String highLow = maximum.intValue()+" / "+minimum.intValue();
             return highLow;
         }
 
