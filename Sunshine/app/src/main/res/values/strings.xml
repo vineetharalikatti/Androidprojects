@@ -4,6 +4,14 @@
     <string name="today">Today, June 24</string>
     <string name="twentyone">21*</string>
     <string name="eight">8*</string>
-    <string name = "action_refresh1" translatable="false">Refresh</string>
+    <string name="action_refresh1" translatable="false">Refresh</string>
     <string name="enterPostalCodeArea">Enter the postal code here</string>
+    <string name="title_activity_detail">View in Detail</string>
+    <string name="hello_world">Hello World</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="choose_location">Choose location></string>
+    <string name="metric_selection">Choose metric selection</string>
+    <string name="pref_location_label">Location</string>
+    <string name="pref_location_key">location</string>
+    <string name="pref_location_default">48084</string>
 </resources>
