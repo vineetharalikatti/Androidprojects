@@ -14,4 +14,10 @@
     <string name="pref_location_label">Location</string>
     <string name="pref_location_key">location</string>
     <string name="pref_location_default">48084</string>
+    <string name="defaultUnit">metric</string>
+    <string name="unit1">unknown1</string>
+    <string name="unit2">unknown2</string>
+    <string name="temperature">temperature</string>
+    <string name="maps">Open in Maps</string>
+    <string name="mapview">View in maps</string>
 </resources>

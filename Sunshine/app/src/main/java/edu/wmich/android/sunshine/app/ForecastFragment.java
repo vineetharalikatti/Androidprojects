@@ -3,6 +3,7 @@ package edu.wmich.android.sunshine.app;
 /**
  * Created by vineeth on 6/13/16.
  */
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -128,6 +129,7 @@ public class ForecastFragment extends Fragment {
         private final String JSON = "json";
         private final String UNITS = "units";
         private final String METRIC = "metric";
+        private final String IMPERIAL = "imperial";
         private final String COUNT = "cnt";
 
         @Override
@@ -155,6 +157,7 @@ public class ForecastFragment extends Fragment {
                 String baseUrl = builder.build().toString();
                 String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
                 URL url = new URL(baseUrl.concat(apiKey));
+
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -211,7 +214,11 @@ public class ForecastFragment extends Fragment {
             final String MIN = "min";
             final String WEATHER = "weather";
             final String DESCRIPTION = "description";
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitType = sharedPreferences.getString(getString(R.string.temperature),getString(R.string.defaultUnit));
 
+            Log.e(LOG_TAG,"unit type is "+unitType);
+            //if(unitType.equals("Imperial"))
             JSONObject json = new JSONObject(forecastJsonStr);
 
             JSONArray listArray = json.getJSONArray(LIST);
@@ -224,7 +231,7 @@ public class ForecastFragment extends Fragment {
                 String max = tempObject.getString(MAX);
                 String min = tempObject.getString(MIN);
 
-                String highlow = formatHighLow(max, min);
+                String highlow = formatHighLow(max, min, unitType);
 
                 JSONObject weatherObject = object.getJSONArray(WEATHER).getJSONObject(0);
 
@@ -236,10 +243,14 @@ public class ForecastFragment extends Fragment {
                 int julianStartDay = android.text.format.Time.getJulianDay(System.currentTimeMillis(),dayTime.gmtoff);
                 dayTime = new android.text.format.Time();
                 long dateTime;
-                dateTime = dayTime.setJulianDay(julianStartDay+i);
+                dateTime = dayTime.setJulianDay(julianStartDay + i);
                 day = getReadableDateString(dateTime);
+                if(unitType.equals("Metric")){
+                    resultStr[i]=day + " - " + descriptionObject + " - " + highlow + " C";
+                }else if(unitType.equals("Imperial")){
+                    resultStr[i]=day + " - " + descriptionObject + " - " + highlow + " F";
+                }
 
-                resultStr[i]=day + " - " + descriptionObject + " - " + highlow;
             }
             return resultStr;
         }
@@ -249,11 +260,22 @@ public class ForecastFragment extends Fragment {
              return shortenedDateFormat.format(time);
          }
 
-        private String formatHighLow(String max, String min) {
-            Double maximum = Double.parseDouble(max);
-            Double minimum = Double.parseDouble(min);
-            String highLow = Math.round(maximum)+" / "+ Math.round(minimum);
-            return highLow;
+        private String formatHighLow(String max, String min, String unitType) {
+            Double maximum,minimum;
+            String highLow = null;
+            if(unitType.equals("Metric")){
+                maximum = Double.parseDouble(max);
+                minimum = Double.parseDouble(min);
+                highLow = Math.round(maximum)+" / "+ Math.round(minimum);
+            }else if(unitType.equals("Imperial")){
+
+                maximum = Double.parseDouble(max);
+                minimum = Double.parseDouble(min);
+                maximum = (maximum*1.8)+32;
+                minimum = (minimum*1.8)+32;
+                highLow = Math.round(maximum)+"/"+Math.round(minimum);
+            }
+            return  highLow;
         }
 
         @Override

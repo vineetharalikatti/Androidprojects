@@ -1,7 +1,9 @@
 package edu.wmich.android.sunshine.app;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -22,8 +24,8 @@ implements Preference.OnPreferenceChangeListener{
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preference_layout);
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_location_key)));
-
-    }
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.temperature)));
+   }
 
     private void bindPreferenceSummaryToValue(Preference preference) {
         // Set the listener to watch for value changes.
