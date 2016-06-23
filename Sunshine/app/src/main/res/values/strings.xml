@@ -20,4 +20,5 @@
     <string name="temperature">temperature</string>
     <string name="maps">Open in Maps</string>
     <string name="mapview">View in maps</string>
+    <string name="share_action">Share</string>
 </resources>
