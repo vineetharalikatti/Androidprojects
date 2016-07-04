@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="edu.wmich.android.popularmovies1.MainActivity"
+    tools:ignore="MergeRootFrame"
+    android:id="@+id/gridlayout_moviesdb"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:columnWidth="90dp"
+    android:numColumns="2"
+    android:verticalSpacing="0dp"
+    android:stretchMode="columnWidth"
+    android:gravity="center">
+</GridView>
