@@ -27,15 +27,13 @@ public class ImageAdapter extends ArrayAdapter<ImageObject> {
         this.popularMovies = popularMovies;
     }
 
-    public void setGridData(ArrayList<ImageObject> mGridData) {
-        this.popularMovies = mGridData;
-        notifyDataSetChanged();
+    public long getItemId(int position) {
+        return 0;
     }
 
     public int getCount() {
 
-
-        if (popularMovies != null) {
+      if (popularMovies != null) {
             listOfMovies = popularMovies.size();
         }
         return listOfMovies;
@@ -45,26 +43,23 @@ public class ImageAdapter extends ArrayAdapter<ImageObject> {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         View view;
-        ImageObject object = getItem(position);
+
+        ImageObject image = getItem(position);
 
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
+            imageView = new ImageView(mContext);
+            // imageView.setLayoutParams(new GridView.LayoutParams(700, 700));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setAdjustViewBounds(true);
 
         } else {
             imageView = (ImageView)convertView;
         }
-        imageView = new ImageView(mContext);
-        imageView.setLayoutParams(new GridView.LayoutParams(800, 800));
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setPadding(8, 8, 8, 8);
-        imageView.setAdjustViewBounds(true);
-        ImageObject image = popularMovies.get(position);
+        int width= mContext.getResources().getDisplayMetrics().widthPixels;
         String baseurl = "http://image.tmdb.org/t/p/w500";
-        String passedurl = "/cGOPbv9wA5gEejkUN892JrveARt.jpg";
-
-        Log.e("base url Image Adaptere",""+baseurl.concat(passedurl));
         Picasso.with(getContext()).load(baseurl.concat(image.getPoster_path())).into(imageView);
-
+        Log.e("Log tag",""+baseurl.concat(image.getPoster_path()));
         return imageView;
     }
 
