@@ -1,6 +1,7 @@
 package edu.wmich.android.popularmovies1;
 
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -41,9 +42,16 @@ public class MainActivityFragment extends Fragment {
     GridView gridView;
     ImageAdapter imageAdapter;
 
-public MainActivityFragment(){
+    public MainActivityFragment(){
 
-}
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updatePopularMovies();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,9 +74,25 @@ public MainActivityFragment(){
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                String pos = AdapterView.
                 Toast.makeText(getContext(), id + "" + position, Toast.LENGTH_SHORT).show();
                 Intent startDetailActivity = new Intent(getActivity(), DetailActivity.class);
+                ImageObject imageObject = new ImageObject();
+
+                String originalTitle = mMovieAdapter.get(position).getOriginal_title();
+                String overview = mMovieAdapter.get(position).getOverview();
+                String releaseDate = mMovieAdapter.get(position).getRelease_date();
+                String voteAverage = mMovieAdapter.get(position).getVote_average();
+                String imagePath = mMovieAdapter.get(position).getPoster_path();
+
+                ArrayList<String> imageArray = new ArrayList<String>();
+                imageArray.add(originalTitle);
+                imageArray.add(overview);
+                imageArray.add(releaseDate);
+                imageArray.add(voteAverage);
+                imageArray.add(imagePath);
+
+                startDetailActivity.putStringArrayListExtra(Intent.EXTRA_TEXT,imageArray);
+
                 if (startDetailActivity != null) {
                     startActivity(startDetailActivity);
                 }
@@ -222,9 +246,11 @@ public MainActivityFragment(){
         protected void onPostExecute(ArrayList<ImageObject> imageObjects) {
             if(imageObjects!=null){
 
-                super.onPostExecute(imageObjects);
+                for(ImageObject a : imageObjects){
+                    mMovieAdapter.add(a);
+                }
                 imageAdapter.notifyDataSetChanged();
-                Log.e(LOG_TAG, imageObjects+"Image Object onPostExecute");
+                Log.e(LOG_TAG, imageObjects + "Image Object onPostExecute");
               }
         }
     }

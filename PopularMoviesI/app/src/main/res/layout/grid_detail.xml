@@ -6,6 +6,25 @@
     tools:context=".DetailActivity$PlacementFragment">
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:id="@+id/movietitle"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/releasedate"
+        android:layout_above="@id/movietitle"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/overview"
+        android:layout_above="@+id/releasedate"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/vote"
+        android:layout_above="@+id/overview"/>
 
 </RelativeLayout>

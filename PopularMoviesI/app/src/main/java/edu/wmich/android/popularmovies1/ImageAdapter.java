@@ -1,12 +1,10 @@
 package edu.wmich.android.popularmovies1;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import java.util.ArrayList;
 import com.squareup.picasso.*;
