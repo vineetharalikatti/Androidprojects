@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Popular Movies I</string>
     <string name="action_settings">Settings</string>
+    <string name="overview">overview</string>
+    <string name="movietitle">movietitle</string>
+    <string name="vote">vote</string>
+    <string name="releasedate">releasedate</string>
+    <string name="listpreferenceName">Sort Order</string>
+    <string name="sortOrder">sortorder</string>
+    <string name="defaultsort">highest</string>
+    <string name="preferedsortorder_key">sort_order</string>
+    <string name="preferedsortorder_value">popular.desc</string>
 </resources>

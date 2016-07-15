@@ -1,11 +1,13 @@
 package edu.wmich.android.popularmovies1;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -116,18 +118,20 @@ public class MainActivityFragment extends Fragment {
 
     private void updatePopularMovies() {
         FetchMoviesActivity movies = new FetchMoviesActivity();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortOrder = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.preferedsortorder_value));
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB)
             movies.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else
-            movies.execute();
+            movies.execute(sortOrder);
     }
 
 
-    private class FetchMoviesActivity extends AsyncTask<Void, Void, ArrayList<ImageObject>> {
+    private class FetchMoviesActivity extends AsyncTask<String, Void, ArrayList<ImageObject>> {
 
-        //https://api.themoviedb.org/3/movie/popular?api_key=c0631d5a0d4a9400627f4628a065c66b
-        //http://api.openweathermap.org/data/2.5/forecast/daily?zip=48084&mode=json&units=metric&cnt=7&APPID=123456
-
+        //https://api.themoviedb.org/3/movie/highest?api_key=c0631d5a0d4a9400627f4628a065c66b
+        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=vote_average.desc
+        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=popular.desc
         private final String LOG_TAG =  FetchMoviesActivity.class.getSimpleName();
 
         private final String API_KEY_STRING = "api_key";
@@ -135,11 +139,12 @@ public class MainActivityFragment extends Fragment {
         private final String HTTP = "https";
         private final String URL = "api.themoviedb.org";
         private final String DATA ="3";
+        private final String DISCOVER = "discover";
         private final String MOVIE = "movie";
-        private final String NUMBER = "popular";
+        private final String SORT = "sort_by";
 
         @Override
-        protected ArrayList<ImageObject> doInBackground(Void... params) {
+        protected ArrayList<ImageObject> doInBackground(String... sortorder) {
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
@@ -150,14 +155,13 @@ public class MainActivityFragment extends Fragment {
                 uri.scheme(HTTP)
                         .authority(URL)
                         .appendPath(DATA)
+                        .appendPath(DISCOVER)
                         .appendPath(MOVIE)
-                        .appendPath(NUMBER)
-                        .appendQueryParameter(API_KEY_STRING,API_KEY);
+                        .appendQueryParameter(API_KEY_STRING,API_KEY)
+                .appendQueryParameter(SORT,sortorder.toString());
                 String baseURL = uri.build().toString();
                 String apikey = "?api_key="+API_KEY;
                 java.net.URL url = new URL(baseURL);
-
-                Log.e(LOG_TAG, "vineeth url" + baseURL);
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");

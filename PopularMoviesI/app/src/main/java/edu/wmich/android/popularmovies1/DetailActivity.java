@@ -52,6 +52,8 @@ public class DetailActivity extends ActionBarActivity{
                 String imagePath;
                 String baseurl = "http://image.tmdb.org/t/p/w500";
                 ImageView imageView = null;
+                imagePath = null
+                        ;
 
                 imageArray = intent.getStringArrayListExtra(Intent.EXTRA_TEXT);
                 for(int i=0;i<imageArray.size();i++){
@@ -61,9 +63,10 @@ public class DetailActivity extends ActionBarActivity{
                     ((TextView) rootView.findViewById(R.id.releasedate)).setText(imageArray.get(2));
                     ((TextView) rootView.findViewById(R.id.vote)).setText(imageArray.get(3));
                     imagePath = imageArray.get(4);
+                 }
 
-
-                }
+                ImageView imageView1 = (ImageView) rootView.findViewById(R.id.imageview);
+                Picasso.with(getContext()).load(baseurl.concat(imagePath)).into(imageView1);
 
             }
             return rootView;
