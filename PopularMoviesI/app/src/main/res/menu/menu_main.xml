@@ -11,4 +11,12 @@
         android:orderInCategory="100"
         android:title="Refresh"
         app:showAsAction="never"/>
+    <item android:id="@+id/action_popular"
+        android:orderInCategory="100"
+        android:title="Popular"
+        app:showAsAction="never"></item>
+    <item android:id="@+id/action_highest"
+        android:orderInCategory="100"
+        android:title="Highest"
+        app:showAsAction="never"></item>
 </menu>

@@ -57,7 +57,6 @@ public class ImageAdapter extends ArrayAdapter<ImageObject> {
         int width= mContext.getResources().getDisplayMetrics().widthPixels;
         String baseurl = "http://image.tmdb.org/t/p/w500";
         Picasso.with(getContext()).load(baseurl.concat(image.getPoster_path())).into(imageView);
-        Log.e("Log tag",""+baseurl.concat(image.getPoster_path()));
         return imageView;
     }
 

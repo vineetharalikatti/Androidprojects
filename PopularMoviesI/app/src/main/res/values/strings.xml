@@ -10,4 +10,6 @@
     <string name="defaultsort">highest</string>
     <string name="preferedsortorder_key">sort_order</string>
     <string name="preferedsortorder_value">popular.desc</string>
+    <string name="popular">popular.desc</string>
+    <string name="highest">higest</string>
 </resources>

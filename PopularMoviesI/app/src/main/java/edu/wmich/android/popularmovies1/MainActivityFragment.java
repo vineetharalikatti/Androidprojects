@@ -51,7 +51,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updatePopularMovies();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String onStartPreference = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.defaultsort));
+        updatePopularMovies(onStartPreference);
     }
 
     @Override
@@ -110,20 +112,27 @@ public class MainActivityFragment extends Fragment {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (id == R.id.action_refresh) {
-            updatePopularMovies();
+            String defaultSortOrder = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.defaultsort));
+            updatePopularMovies(defaultSortOrder);
+        }else if(id == R.id.action_popular){
+            String popular = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.popular));
+            updatePopularMovies(popular);
+        }else if(id == R.id.action_highest){
+            String highest = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.highest));
+            updatePopularMovies(highest);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void updatePopularMovies() {
+    private void updatePopularMovies(String passedSortOrder) {
         FetchMoviesActivity movies = new FetchMoviesActivity();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String sortOrder = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.preferedsortorder_value));
+
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.HONEYCOMB)
-            movies.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            movies.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, passedSortOrder);
         else
-            movies.execute(sortOrder);
+            movies.execute(passedSortOrder);
     }
 
 
@@ -131,7 +140,7 @@ public class MainActivityFragment extends Fragment {
 
         //https://api.themoviedb.org/3/movie/highest?api_key=c0631d5a0d4a9400627f4628a065c66b
         //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=vote_average.desc
-        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=popular.desc
+        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=popular.asc
         private final String LOG_TAG =  FetchMoviesActivity.class.getSimpleName();
 
         private final String API_KEY_STRING = "api_key";
@@ -158,8 +167,10 @@ public class MainActivityFragment extends Fragment {
                         .appendPath(DISCOVER)
                         .appendPath(MOVIE)
                         .appendQueryParameter(API_KEY_STRING,API_KEY)
-                .appendQueryParameter(SORT,sortorder.toString());
+                .appendQueryParameter(SORT, sortorder[0]);
                 String baseURL = uri.build().toString();
+
+                Log.e(LOG_TAG,"THis is the base URL "+baseURL);
                 String apikey = "?api_key="+API_KEY;
                 java.net.URL url = new URL(baseURL);
 
