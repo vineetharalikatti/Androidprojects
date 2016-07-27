@@ -57,11 +57,10 @@ public class DetailActivity extends ActionBarActivity{
 
                 imageArray = intent.getStringArrayListExtra(Intent.EXTRA_TEXT);
                 for(int i=0;i<imageArray.size();i++){
-
-                    ((TextView) rootView.findViewById(R.id.movietitle)).setText(imageArray.get(0));
+                    ((TextView) rootView.findViewById(R.id.movietitle)).setText("Movie Title : "+imageArray.get(0));
                     ((TextView) rootView.findViewById(R.id.overview)).setText(imageArray.get(1));
-                    ((TextView) rootView.findViewById(R.id.releasedate)).setText(imageArray.get(2));
-                    ((TextView) rootView.findViewById(R.id.vote)).setText(imageArray.get(3));
+                    ((TextView) rootView.findViewById(R.id.releasedate)).setText("Release Date : "+imageArray.get(2));
+                    ((TextView) rootView.findViewById(R.id.vote)).setText("Rating : "+imageArray.get(3));
                     imagePath = imageArray.get(4);
                  }
 

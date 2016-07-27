@@ -2,7 +2,6 @@ package edu.wmich.android.popularmovies1;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,8 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +27,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by vineeth on 7/3/16.
@@ -78,10 +74,7 @@ public class MainActivityFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), id + "" + position, Toast.LENGTH_SHORT).show();
                 Intent startDetailActivity = new Intent(getActivity(), DetailActivity.class);
-                ImageObject imageObject = new ImageObject();
-
                 String originalTitle = mMovieAdapter.get(position).getOriginal_title();
                 String overview = mMovieAdapter.get(position).getOverview();
                 String releaseDate = mMovieAdapter.get(position).getRelease_date();
@@ -113,10 +106,7 @@ public class MainActivityFragment extends Fragment {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (id == R.id.action_refresh) {
-            String defaultSortOrder = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.defaultsort));
-            updatePopularMovies(defaultSortOrder);
-        }else if(id == R.id.action_popular){
+        if(id == R.id.action_popular){
             String popular = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.popular));
             updatePopularMovies(popular);
         }else if(id == R.id.action_highest){
@@ -138,9 +128,6 @@ public class MainActivityFragment extends Fragment {
 
     private class FetchMoviesActivity extends AsyncTask<String, Void, ArrayList<ImageObject>> {
 
-        //https://api.themoviedb.org/3/movie/highest?api_key=c0631d5a0d4a9400627f4628a065c66b
-        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=vote_average.desc
-        //http://api.themoviedb.org/3/discover/movie?api_key=c0631d5a0d4a9400627f4628a065c66b&sort_by=popular.asc
         private final String LOG_TAG =  FetchMoviesActivity.class.getSimpleName();
 
         private final String API_KEY_STRING = "api_key";
@@ -170,7 +157,6 @@ public class MainActivityFragment extends Fragment {
                 .appendQueryParameter(SORT, sortorder[0]);
                 String baseURL = uri.build().toString();
 
-                Log.e(LOG_TAG,"THis is the base URL "+baseURL);
                 String apikey = "?api_key="+API_KEY;
                 java.net.URL url = new URL(baseURL);
 
@@ -259,13 +245,14 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(ArrayList<ImageObject> imageObjects) {
+            mMovieAdapter.clear();
+
             if(imageObjects!=null){
 
                 for(ImageObject a : imageObjects){
                     mMovieAdapter.add(a);
                 }
                 imageAdapter.notifyDataSetChanged();
-                Log.e(LOG_TAG, imageObjects + "Image Object onPostExecute");
               }
         }
     }

@@ -27,16 +27,7 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(id==R.id.action_settings){
-            Intent intent = new Intent(this, SettingsActivity.class);
-            this.startActivity(intent);
-            return true;
-        }else if(id==R.id.action_popular){
-            preferences.edit().putInt(String.valueOf(R.string.sortOrder),R.string.popular).apply();
-        }
         return super.onOptionsItemSelected(item);
 
     }
