@@ -48,7 +48,7 @@ public class MainActivityFragment extends Fragment {
     public void onStart() {
         super.onStart();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String onStartPreference = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.defaultsort));
+        String onStartPreference = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.top_rated));
         updatePopularMovies(onStartPreference);
     }
 
@@ -110,7 +110,7 @@ public class MainActivityFragment extends Fragment {
             String popular = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.popular));
             updatePopularMovies(popular);
         }else if(id == R.id.action_highest){
-            String highest = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.highest));
+            String highest = sharedPreferences.getString(getString(R.string.preferedsortorder_key),getString(R.string.top_rated));
             updatePopularMovies(highest);
         }
         return super.onOptionsItemSelected(item);
@@ -151,10 +151,9 @@ public class MainActivityFragment extends Fragment {
                 uri.scheme(HTTP)
                         .authority(URL)
                         .appendPath(DATA)
-                        .appendPath(DISCOVER)
                         .appendPath(MOVIE)
-                        .appendQueryParameter(API_KEY_STRING,API_KEY)
-                .appendQueryParameter(SORT, sortorder[0]);
+                        .appendPath(sortorder[0])
+                        .appendQueryParameter(API_KEY_STRING,API_KEY);
                 String baseURL = uri.build().toString();
 
                 String apikey = "?api_key="+API_KEY;

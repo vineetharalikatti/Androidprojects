@@ -10,8 +10,8 @@
     <string name="defaultsort">highest</string>
     <string name="preferedsortorder_key">sort_order</string>
     <string name="preferedsortorder_value">popular.asc</string>
-    <string name="popular">popular.asc</string>
-    <string name="highest">higest</string>
+    <string name="popular">popular</string>
+    <string name="top_rated">top_rated</string>
     <string name="releaseDateLabel">Release Date :</string>
     <string name="rating">Rating :</string>
     <string name="movieTitle">Title :</string>
